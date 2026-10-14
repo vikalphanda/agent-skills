@@ -23,11 +23,11 @@ Copy the skill folder into your agent's skills directory:
 | Gemini CLI | `~/.gemini/skills/` | — |
 
 ```bash
-gh repo clone vihanda_microsoft/agent-skills
+gh repo clone vikalphanda/agent-skills
 cp -R agent-skills/skills/pr-primer ~/.copilot/skills/
 ```
 
-Or use the installer: `npx skills@latest add vihanda_microsoft/agent-skills --skill pr-primer`
+Or use the installer: `npx skills@latest add vikalphanda/agent-skills --skill pr-primer`
 
 For other agents, add an instruction such as: *"For PR primers, follow `<path>/skills/pr-primer/SKILL.md`."*
 
