@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PR Poster: {{TITLE}}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px; background: #eef2f6; color: #172b4d; font: 15px/1.4 "Segoe UI", Arial, sans-serif; }
+  main { max-width: 1120px; margin: auto; padding: 24px; background: white; border-top: 8px solid #0969da; }
+  h1 { margin: 0 0 6px; font-size: 26px; }
+  h2 { margin: 0 0 8px; font-size: 18px; color: #084b94; }
+  h3 { margin: 4px 0; font-size: 15px; }
+  p { margin: 6px 0; }
+  .meta, footer { font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  section { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; break-inside: avoid; }
+  .wide { grid-column: 1 / -1; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .label { font-weight: bold; }
+  .notice { border-left: 4px solid #9a6700; padding-left: 8px; }
+  code { font-size: .95em; overflow-wrap: anywhere; }
+  ol { margin: 6px 0; padding-left: 22px; }
+  a { color: #084b94; }
+  svg { display: block; width: 100%; max-height: 130px; }
+  footer { border-top: 1px solid #cbd5e1; padding-top: 8px; }
+  @page { size: A4 landscape; margin: 10mm; }
+  @media print {
+    body { padding: 0; background: white; font-size: 11pt; }
+    main { max-width: none; padding: 0; border-top-width: 4px; }
+    h1 { font-size: 20pt; }
+    h2 { font-size: 13pt; }
+    h3, .meta, footer { font-size: 11pt; }
+    section { padding: 8px; }
+    .grid { gap: 8px; margin: 8px 0; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>PR Poster: {{TITLE}}</h1>
+    <div class="meta">{{PR_LINK_OR_BRANCH}} | Generated {{DATE}}</div>
+    <div class="meta">Head <code>{{HEAD_SHA}}</code> | Base <code>{{BASE_SHA}}</code></div>
+  </header>
+  <div class="grid">
+    <section>
+      <h2>1. Why</h2>
+      <p><span class="label">{{Stated_OR_Inferred}}:</span> {{PROBLEM}}</p>
+      <p><span class="label">{{Stated_OR_Inferred}}:</span> {{INTENDED_OUTCOME}}</p>
+      <p>{{REASON_SOURCE}}</p>
+    </section>
+    <section>
+      <h2>2. Where</h2>
+      <!-- Replace this SVG with the verified component diagram. Label changed parts in text. -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" role="img" aria-labelledby="diagram-title diagram-desc">
+        <title id="diagram-title">{{DIAGRAM_TITLE}}</title>
+        <desc id="diagram-desc">{{DIAGRAM_TEXT_EQUIVALENT}}</desc>
+        <rect x="10" y="20" width="170" height="60" rx="8" fill="#edf5ff" stroke="#0969da"/>
+        <text x="95" y="54" text-anchor="middle" font-size="15">{{CALLER}}</text>
+        <path d="M180 50 H285 M277 43 L285 50 L277 57" fill="none" stroke="#172b4d" stroke-width="2"/>
+        <rect x="290" y="20" width="180" height="60" rx="8" fill="#fff4ce" stroke="#9a6700"/>
+        <text x="380" y="45" text-anchor="middle" font-size="15">{{CHANGED_COMPONENT}}</text>
+        <text x="380" y="66" text-anchor="middle" font-size="13">Changed</text>
+      </svg>
+      <p>{{DIAGRAM_TEXT_EQUIVALENT_AND_EVIDENCE_LABEL}}</p>
+    </section>
+    <section>
+      <h2>3. Before / After</h2>
+      <p>Trigger: {{WORKFLOW_TRIGGER}}</p>
+      <div class="pair">
+        <div><h3>Before</h3><ol><li>{{OLD_STEP}}</li></ol></div>
+        <div><h3>After</h3><ol><li>{{NEW_STEP}}</li></ol></div>
+      </div>
+    </section>
+    <section>
+      <h2>4. Example</h2>
+      <p>Input: <code>{{INPUT}}</code></p>
+      <p>Before: {{OLD_RESULT}}</p>
+      <p>After: {{NEW_RESULT}}</p>
+      <p><span class="label">{{Fixture_OR_Illustrative}}:</span> {{EXAMPLE_SOURCE}}</p>
+    </section>
+    <section class="wide">
+      <h2>5. Review map</h2>
+      <div class="pair">
+        <div>
+          <h3>Read first</h3>
+          <ol><li><code>{{KEY_FILE}}</code>: {{WHY_IT_MATTERS}}</li></ol>
+        </div>
+        <div>
+          <h3>Tests</h3>
+          <p>Behaviour changes: {{TOTAL}}. Covered: {{COVERED}}. Partly: {{PARTLY}}. Untested: {{UNTESTED}}.</p>
+          <p>Execution: {{NOT_RUN_OR_RESULT_AND_SCOPE}}</p>
+          <p class="notice">{{TEST_GAPS_OR_NO_IDENTIFIED_GAPS}}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer>
+    <p>{{SCOPE_NOTE}}</p>
+    <a href="{{COMPANION_FILENAME}}">Read the detailed explanation</a>
+    <p>This poster explains the change. It does not approve it.</p>
+  </footer>
+</main>
+</body>
+</html>

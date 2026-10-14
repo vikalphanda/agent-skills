@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--
+  PR Primer template. Replace every {{PLACEHOLDER}}; repeat <!-- repeat --> blocks as needed.
+  Keep section order and ids. Delete the Mermaid <script> if all diagrams are inlined as SVG.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>PR Primer: {{TITLE}}</title>
+<style>
+  :root { --fg:#1f2328; --muted:#59636e; --bg:#fff; --card:#f6f8fa; --line:#d1d9e0;
+          --low:#1a7f37; --med:#9a6700; --high:#cf222e; --accent:#0969da; }
+  * { box-sizing:border-box; }
+  body { font:16px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif; color:var(--fg); background:var(--bg);
+         max-width:1000px; margin:0 auto; padding:24px; }
+  header { border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:16px; }
+  h1 { margin:0 0 4px; font-size:1.7em; } h2 { margin-top:2em; border-bottom:1px solid var(--line); padding-bottom:4px; }
+  .meta { color:var(--muted); font-size:.9em; } .meta code { font-size:.95em; }
+  nav { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px 16px; }
+  nav ol { margin:4px 0; columns:2; }
+  .banner { background:#fff8c5; color:#4d2d00; border:1px solid #d4a72c; border-radius:6px; padding:8px 12px; margin:12px 0; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; }
+  .card b { display:block; font-size:1.3em; }
+  .risk-Low { color:var(--low); } .risk-Medium { color:var(--med); } .risk-High { color:var(--high); }
+  table { border-collapse:collapse; width:100%; margin:8px 0; font-size:.95em; }
+  th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--card); }
+  code { background:var(--card); padding:1px 5px; border-radius:4px; font-size:.9em; }
+  pre { background:var(--card); padding:12px; border-radius:6px; overflow-x:auto; }
+  .tag { display:inline-block; font-size:.75em; font-weight:600; padding:1px 7px; border-radius:10px;
+         border:1px solid currentColor; margin-right:4px; vertical-align:middle; }
+  .Stated, .Covered { color:var(--low); } .Inferred, .Partly, .Illustrative, .inferred, .heuristic { color:var(--med); }
+  .Untested { color:var(--high); }
+  .ba { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ba > div { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:4px 14px; }
+  details { border:1px solid var(--line); border-radius:8px; padding:6px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; }
+  .diagram { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; overflow-x:auto; }
+  footer { margin-top:3em; color:var(--muted); font-size:.85em; border-top:1px solid var(--line); padding-top:8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PR Primer: {{TITLE}}</h1>
+  <div class="meta">
+    <a href="{{PR_URL}}">{{PR_ID}}</a> · by {{AUTHOR}} · <code>{{BASE_BRANCH}}</code> ← <code>{{HEAD_BRANCH}}</code><br>
+    Head <code>{{HEAD_SHA}}</code> · Base <code>{{BASE_SHA}}</code> · Generated {{DATE}}
+  </div>
+  <!-- Only when no Stated Reason exists: -->
+  <div class="banner">⚠ No Stated Reason; all motives inferred.</div>
+</header>
+
+<nav><b>Contents</b>
+  <ol>
+    <li><a href="#glance">At a glance</a></li>
+    <li><a href="#key-files">Key files</a></li>
+    <li><a href="#why">Why</a></li>
+    <li><a href="#architecture">Component architecture</a></li>
+    <li><a href="#workflows">Workflows impacted</a></li>
+    <li><a href="#changes">What changed</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#tests">Tests</a></li>
+    <li><a href="#focus">Reviewer focus points</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+  </ol>
+</nav>
+
+<section id="glance">
+  <h2>1. At a glance</h2>
+  <p>{{ONE_PARAGRAPH_SUMMARY: what changes, for whom, in 3–5 short sentences}}</p>
+  <div class="cards">
+    <div class="card">Change type<b>{{feature | fix | refactor | perf | chore}}</b></div>
+    <div class="card">Size<b>{{+ADD / −DEL}}</b>{{N}} files ({{M}} set aside)</div>
+    <div class="card">Risk <span class="tag heuristic">heuristic</span><b class="risk-{{Low|Medium|High}}">{{Low|Medium|High}}</b>{{ONE_LINE_REASON}}</div>
+    <div class="card">Review time <span class="tag heuristic">heuristic</span><b>{{20–40 min}}</b></div>
+    <div class="card">Behaviour changes<b>{{B}}</b>{{U}} untested</div>
+  </div>
+  <!-- Always present. In single mode, keep only the first row. -->
+  <details>
+    <summary>How this primer was built</summary>
+    <table>
+      <tr><th>Mode</th><td>{{single | split: REASON from plan.json}}{{, sequential when no sub-agents}}</td></tr>
+      <tr><th>Areas</th><td>{{A01 label (N files), A02 label (N files), …}}</td></tr>
+      <tr><th>Links between areas</th><td>{{R}} real, {{I}} incidental, {{D}} disputed, {{V}} unverified</td></tr>
+      <tr><th>Not covered</th><td>{{UNKNOWNS, one per line, with area id, or "none"}}</td></tr>
+      <tr><th>Dropped claims</th><td>{{N claims whose citations failed verification, or "none"}}</td></tr>
+    </table>
+  </details>
+</section>
+
+<section id="key-files">
+  <h2>2. Key files</h2>
+  <p>Read the files in this order. Test files are listed under <a href="#tests">Tests</a>.</p>
+  <table>
+    <tr><th>Read order</th><th>File</th><th>Lines</th><th>Behaviour changes</th><th>Why it matters</th></tr>
+    <!-- repeat -->
+    <tr><td>1</td><td><code>{{PATH}}</code></td><td>+{{A}} / −{{D}}</td><td>{{CONCEPT_NAMES}}</td><td>{{ONE_LINE}}</td></tr>
+  </table>
+</section>
+
+<section id="why">
+  <h2>3. Why</h2>
+  <ul>
+    <!-- repeat -->
+    <li><span class="tag Stated">Stated</span> {{REASON}} <small>(source: {{PR body | commit abc123 | #123}})</small></li>
+    <li><span class="tag Inferred">Inferred</span> {{REASON}} <small>(from: {{CODE_EVIDENCE}})</small></li>
+  </ul>
+</section>
+
+<section id="architecture">
+  <h2>4. Component architecture</h2>
+  <p>{{COMPONENT_PURPOSE: 2–3 sentences}}</p>
+  <table>
+    <tr><th>Part</th><th>Role</th><th>Changed?</th></tr>
+    <!-- repeat -->
+    <tr><td><code>{{PART}}</code></td><td>{{ROLE}}</td><td>{{Yes|No}}</td></tr>
+  </table>
+  <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  {{COMPONENT_DIAGRAM}}
+  classDef changed fill:#fff1c2,stroke:#d4a72c,stroke-width:2px
+</pre>
+  </div>
+  <p><small>Parts marked <span class="tag inferred">inferred</span> come from code reading, not docs.</small></p>
+</section>
+
+<section id="workflows">
+  <h2>5. Workflows impacted</h2>
+  <!-- repeat per workflow -->
+  <details open>
+    <summary>{{WORKFLOW_NAME}} — triggered by {{TRIGGER}}</summary>
+    <div class="ba">
+      <div><h4>Before</h4><ol><li>{{STEP}}</li></ol></div>
+      <div><h4>After</h4><ol><li>{{STEP}} <!-- bold the steps that differ --></li></ol></div>
+    </div>
+    <div class="diagram">
+<pre class="mermaid">
+sequenceDiagram
+  {{AFTER_SEQUENCE}}
+</pre>
+    </div>
+  </details>
+</section>
+
+<section id="changes">
+  <h2>6. What changed</h2>
+  <!-- Split mode: put an <h3>Area {{ID}}: {{LABEL}}</h3> before each area's concepts; keep one number sequence. -->
+  <!-- repeat per Behaviour Change concept -->
+  <details open>
+    <summary>{{N}}. {{CONCEPT_NAME}}</summary>
+    <p>{{WHAT_AND_HOW: short sentences, step by step}}</p>
+    <ol><li>{{IMPLEMENTATION_STEP with <code>identifier</code>}}</li></ol>
+    <p>Files: <code>{{PATH}}</code>, <code>{{PATH}}</code></p>
+    <pre><code>{{SHORT_KEY_SNIPPET, optional, ≤ 15 lines}}</code></pre>
+  </details>
+
+  <h3>Mechanical changes</h3>
+  <ul>
+    <!-- repeat, one line each -->
+    <li>{{KIND}}: {{ONE_LINE}} ({{N}} files)</li>
+  </ul>
+  <p><small>Set aside: {{GLOBS of generated / vendored / lock files, or "none"}}</small></p>
+
+  <h3>File → change index</h3>
+  <table>
+    <tr><th>File</th><th>Changes</th></tr>
+    <!-- repeat -->
+    <tr><td><code>{{PATH}}</code></td><td>{{CONCEPT_NUMBERS or "Mechanical"}}</td></tr>
+  </table>
+</section>
+
+<section id="examples">
+  <h2>7. Examples</h2>
+  <table>
+    <tr><th>Change</th><th>Input</th><th>Before</th><th>After</th><th>Source</th></tr>
+    <!-- repeat -->
+    <tr><td>{{CONCEPT}}</td><td><code>{{INPUT}}</code></td><td>{{OLD}}</td><td>{{NEW}}</td>
+        <td><code>{{TEST_OR_FIXTURE}}</code> or <span class="tag Illustrative">Illustrative</span></td></tr>
+  </table>
+</section>
+
+<section id="tests">
+  <h2>8. Tests</h2>
+  <p>{{TESTS_RUN_NOTE: "Tests were not run; the map comes from reading code." or the command and result}}</p>
+  <table>
+    <tr><th>Behaviour change</th><th>Status</th><th>Tests</th><th>What the tests check</th></tr>
+    <!-- repeat -->
+    <tr><td>{{CONCEPT}}</td><td><span class="tag {{Covered|Partly|Untested}}">{{Covered|Partly|Untested}}</span></td>
+        <td><code>{{TEST_NAME}}</code></td><td>{{ASSERTION_SUMMARY}}</td></tr>
+  </table>
+  <h3>Test files in this change</h3>
+  <ul><li><code>{{TEST_PATH}}</code> — {{added|changed}}, +{{A}} / −{{D}}</li></ul>
+</section>
+
+<section id="focus">
+  <h2>9. Reviewer focus points</h2>
+  <ol>
+    <!-- repeat -->
+    <li>{{NEUTRAL_POINTER}} <small>(<code>{{PATH}}:{{LINE}}</code>)</small></li>
+  </ol>
+</section>
+
+<section id="glossary">
+  <h2>10. Glossary</h2>
+  <dl>
+    <!-- repeat -->
+    <dt><b>{{TERM}}</b></dt><dd>{{ONE_SENTENCE_DEFINITION}}</dd>
+  </dl>
+</section>
+
+<footer>Generated by the <code>pr-primer</code> skill. This primer explains the change; it does not approve it.
+  Regenerate after new commits; compare the head SHA above with the PR.</footer>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "default",
+    securityLevel: "loose"
+  });
+</script>
+</body>
+</html>
