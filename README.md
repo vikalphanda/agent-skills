@@ -1,9 +1,8 @@
 # agent-skills
 
-Reusable skills for coding agents (GitHub Copilot, Claude Code, Codex, Gemini CLI, Cursor, and others).
+Reusable skills for coding agents (GitHub Copilot, Claude Code, Codex, Cursor, and others).
 Each skill is a folder under [`skills/`](skills/) with a `SKILL.md` entry point.
 
-> Private repo: you need read access and a signed-in `gh` / `git` to install.
 
 ## Skills
 
@@ -20,7 +19,6 @@ Copy the skill folder into your agent's skills directory:
 | GitHub Copilot | `~/.copilot/skills/` | `.github/skills/` |
 | Claude Code | `~/.claude/skills/` | `.claude/skills/` |
 | Codex | `~/.codex/skills/` | `.agents/skills/` |
-| Gemini CLI | `~/.gemini/skills/` | — |
 
 ```bash
 gh repo clone vikalphanda/agent-skills
@@ -32,6 +30,10 @@ Or use the installer: `npx skills@latest add vikalphanda/agent-skills --skill pr
 For other agents, add an instruction such as: *"For PR primers, follow `<path>/skills/pr-primer/SKILL.md`."*
 
 To update, copy the folder again.
+
+> **Status: work in progress.**
+> More skills are being added, are a versioned release package is coming soon.
+> Skill names, options and file layouts may change before the first release.
 
 ## pr-primer
 
